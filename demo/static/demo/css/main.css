@@ -1,0 +1,28 @@
+body {
+	direction: ltr;
+}
+
+h2 {
+	font-weight: bold;
+}
+
+.btn {
+	font-size: 17px; // just affects the draw button
+	padding: 4px 8px 2px;
+}
+
+.container {
+	max-width: 1200px;
+}
+
+textarea {
+	direction: ltr;
+	font-family: serif;
+	tab-size: 15;
+	min-height: 300px;
+	margin-top: 5px;
+}
+
+#draw {
+	margin-top: 5px;
+}
