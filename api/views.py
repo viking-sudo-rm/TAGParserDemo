@@ -53,7 +53,6 @@ def get_conllu(test_opts):
 def output_sents(sents, test_opts):
 	sents = sent_tokenize(sents)
 	sents = map(word_tokenize, sents)
-	# path = os.path.join(PATH_TO_PARSER, test_opts.base_dir, 'sents', 'test.txt')
 	path = os.path.join(test_opts.base_dir, 'sents', 'test.txt')
 	with open(path, 'wt') as fout:
 		for sent in sents:
