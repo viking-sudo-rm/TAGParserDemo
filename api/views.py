@@ -3,7 +3,7 @@ from __future__ import unicode_literals, print_function
 
 import tensorflow as tf
 from nltk.tokenize import sent_tokenize, word_tokenize
-import json, os, sys, pickle
+import json, os, sys, pickle, traceback
 
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
@@ -20,7 +20,7 @@ def read_sents(sents_file):
 	with open(sents_file) as fhand:
 		return [line.split() for line in fhand]
 
-def get_conllu(test_opts):
+def get_parse(test_opts):
 	outputs = []
 	sents = read_sents(test_opts.text_test)
 	stags = read_sents(test_opts.predicted_stags_file)
@@ -35,14 +35,20 @@ def get_conllu(test_opts):
 			pos_sent = pos[sent_idx]
 			arcs_sent = arcs[sent_idx]
 			rels_sent = rels[sent_idx]
+			print(len(sent), sent)
+			print(len(stags_sent), stags_sent)
 			for word_idx in xrange(len(sent)):
 				line = [str(word_idx+1)]
+				line.append(sent[word_idx])		##
+				line.append('_') 				##
 				line.append(sent[word_idx])
 				line.append('_')
 				line.append(stags_sent[word_idx])
 				line.append(pos_sent[word_idx])
 				line.append('_')
+				line.append('_')				##
 				line.append(arcs_sent[word_idx])
+				line.append('_')				##
 				line.append(rels_sent[word_idx])
 				line.append('_')
 				output += '\t'.join(line)
@@ -52,7 +58,9 @@ def get_conllu(test_opts):
 
 def output_sents(sents, test_opts):
 	sents = sent_tokenize(sents)
+	print(sents)
 	sents = map(word_tokenize, sents)
+	print(sents)
 	path = os.path.join(test_opts.base_dir, 'sents', 'test.txt')
 	with open(path, 'wt') as fout:
 		for sent in sents:
@@ -72,6 +80,7 @@ with graph.as_default():
 	model = Model(opts, test_opts)
 	session = tf.Session()
 	with session.as_default():
+		session.run(tf.global_variables_initializer())
 		saver = tf.train.Saver()
 		saver.restore(session, test_opts.modelname)
 
@@ -87,14 +96,22 @@ def parse(request):
 	try:
 		args = json.loads(request.body)
 	except:
-		return JsonResponse(None, safe=False)
+		return JsonResponse({"error": "no POST data"}, safe=False)
 	if type(args) != dict or "text" not in args:
-		return JsonResponse(None, safe=False)
+		return JsonResponse({"error": "no text"}, safe=False)
 
 	os.chdir(PATH_TO_PARSER)
 	text = args["text"]
-	output_sents(text, test_opts)
-	model.run_epoch(session, True)
-	conllu = get_conllu(test_opts)
-	os.chdir(cwd)
-	return JsonResponse({"conllu": conllu}, safe=False)
+	print(text, "|")
+	try:
+		output_sents(text, test_opts)
+		model.run_epoch(session, True)
+		parse = get_parse(test_opts)
+		os.chdir(cwd)
+		return JsonResponse({"conllu": conllu}, safe=False)
+	except:
+		os.chdir(cwd)
+		print('-' * 60)
+		traceback.print_exc(file=sys.stdout)
+		print('-' * 60)
+		return JsonResponse({"error": "internal error"}, safe=False)

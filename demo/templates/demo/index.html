@@ -12,30 +12,64 @@
 <link rel="stylesheet" href="{% static 'demo/tree.css' %}">
 <script type="text/javascript" src="{% static 'demo/d3.js' %}"></script>
 <script type="text/javascript" src="{% static 'demo/dependency-tree.js' %}"></script>
+<script type="text/javascript" src="{% static 'demo/displacy.js' %}"></script>
+<!-- <script type="text/javascript" src="{% static 'demo/jquery-3.3.1.min.js' %}"></script> -->
 
 <div class="container">
-<h2>Dependency Parse Tree</h2>
-<div class="tree">
-	<svg height="0"></svg>
-</div>
-<textarea id="data" class="form-control">
-1	Die	_	der	_	ART	_	case=nom|number=pl|gender=*	-1	2	_	NK	_	_
-2	Betriebskosten	_	betriebskosten	_	NN	_	case=nom|number=pl|gender=*	-1	7	_	SB	_	_
-3	für	_	für	_	APPR	_	_	-1	2	_	MNR	_	_
-4	den	_	der	_	ART	_	case=acc|number=sg|gender=masc	-1	6	_	NK	_	_
-5	schmucken	_	schmucken	_	ADJA	_	case=acc|number=sg|gender=masc|degree=pos	-1	6	_	NK	_	_
-6	Veranstaltungsort	_	veranstaltungsort	_	NN	_	case=acc|number=sg|gender=masc	-1	3	_	NK	_	_
-7	sind	_	sein	_	VAFIN	_	number=pl|person=3|tense=pres|mood=ind	-1	0	_	--	_	_
-8	hoch	_	hoch	_	ADJD	_	degree=pos	-1	7	_	PD	_	_
-9	.	_	--	_	$.	_	_	-1	8	_	--	_	_
-</textarea>
-<button id="draw" class="btn btn-default">draw</button>
+
+<h2>TAG Parsing</h2>
+<input id="raw" type="text" />
+<button id="go" class="btn btn-default">Parse</button>
+
+<!-- https://github.com/explosion/displacy -->
+<div id="displacy"></div>
+
 </div>
 <script type="text/javascript">
-	d3.select('#draw').on('click', function() {
-		drawTree('.tree svg', d3.select('#data')[0][0].value, false);
-	});
-	d3.select('#draw').on('click')();
+
+const URL = "api/parse";
+
+const displacy = new displaCy(null, {
+	container: '#displacy',
+	format: 'spacy',
+	distance: 300,
+	offsetX: 100
+});
+
+const exampleParse = `{
+    "arcs": [
+        { "dir": 'right', "end": 1, "label": 'npadvmod', "start": 0 }
+    ],
+    "words": [
+        { "tag": 'UH', "text": 'Hello' },
+        { "tag": 'NNP', "text": 'World.' }
+    ]
+}`;
+
+// displacy.render(parse, {
+//     color: '#ff0000'
+// });
+
+d3.select('#go').on('click', function() {
+	d3.json(URL, function(error, data) {
+		data["conllu"].forEach(function(parse, i) {
+			displacy.render(JSON.parse(exampleParse), {
+				color: "#ff0000"
+			});
+			// d3.select("#parses").append("svg")
+			// 	.attr("id", "tree" + i);
+			// 	// .attr("width", 50)
+			// 	// .attr("height", 50)
+			// drawTree("svg#tree" + i, parse, false);
+		})
+	})
+		.header("Content-Type","application/json")
+		.send(
+			"POST",
+			JSON.stringify({text: d3.select("#raw").property("value")})
+		);
+});
+
 </script>
 </body>
 </html>
