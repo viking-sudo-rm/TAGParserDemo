@@ -3,7 +3,7 @@
 <html>
 <head>
 	<meta charset="utf-8">
-	<title>Dependency Parse Tree visualization using d3.js</title>
+	<title>TAG Visualization</title>
 </head>
 <body>
 
@@ -17,11 +17,10 @@
 
 <div class="container">
 
-<h2>TAG Parsing</h2>
+<h2>TAG Visualization</h2>
 <input id="raw" type="text" />
 <button id="go" class="btn btn-default">Parse</button>
 
-<!-- https://github.com/explosion/displacy -->
 <div id="displacy"></div>
 
 </div>
@@ -29,39 +28,26 @@
 
 const URL = "api/parse";
 
+/**********************
+DisplaCy Documentation:
+https://github.com/explosion/spacy-dev-resources/tree/master/jupyter-displacy#configuration
+https://github.com/explosion/spaCy/issues/1058
+https://github.com/explosion/displacy/blob/master/assets/js/displacy.js
+**********************/
 const displacy = new displaCy(null, {
 	container: '#displacy',
 	format: 'spacy',
-	distance: 300,
-	offsetX: 100
+	distance: 100,
+	offsetX: 20
 });
-
-const exampleParse = `{
-    "arcs": [
-        { "dir": 'right', "end": 1, "label": 'npadvmod', "start": 0 }
-    ],
-    "words": [
-        { "tag": 'UH', "text": 'Hello' },
-        { "tag": 'NNP', "text": 'World.' }
-    ]
-}`;
-
-// displacy.render(parse, {
-//     color: '#ff0000'
-// });
 
 d3.select('#go').on('click', function() {
 	d3.json(URL, function(error, data) {
-		data["conllu"].forEach(function(parse, i) {
-			displacy.render(JSON.parse(exampleParse), {
-				color: "#ff0000"
-			});
-			// d3.select("#parses").append("svg")
-			// 	.attr("id", "tree" + i);
-			// 	// .attr("width", 50)
-			// 	// .attr("height", 50)
-			// drawTree("svg#tree" + i, parse, false);
-		})
+		// data["parse"].forEach(function(raw, i) {
+		console.log(data);
+		displacy.render(data["parse"], {
+			color: "#000000"
+		});
 	})
 		.header("Content-Type","application/json")
 		.send(
