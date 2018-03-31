@@ -48,15 +48,30 @@ def output_sents(text, test_opts):
 		fout.write(' '.join(sent))
 		fout.write('\n')
 
-cwd = os.getcwd()
-os.chdir(PATH_TO_PARSER)
-sys.path.insert(0, os.path.abspath("."))
+sys.path.insert(0, os.path.abspath(PATH_TO_PARSER))
 import utils
 
-with open('demo/configs/config_demo.pkl') as fin:
+with open(os.path.join(PATH_TO_PARSER, 'demo/configs/config_demo.pkl')) as fin:
 	opts = pickle.load(fin)
-with open('demo/configs/config_demo_test.pkl') as fin:
+with open(os.path.join(PATH_TO_PARSER, 'demo/configs/config_demo_test.pkl')) as fin:
 	test_opts = pickle.load(fin)
+
+print(test_opts.pretrained)
+
+test_opts.base_dir = os.path.abspath(os.path.join(PATH_TO_PARSER, "demo"))
+opts.word_embeddings_file = os.path.abspath(os.path.join(PATH_TO_PARSER, opts.word_embeddings_file))
+
+# opts.text_train = os.path.abspath(os.path.join(PATH_TO_PARSER, opts.text_train))
+# opts.tag_train = os.path.abspath(os.path.join(PATH_TO_PARSER, opts.tag_train))
+# opts.jk_train = os.path.abspath(os.path.join(PATH_TO_PARSER, opts.jk_train))
+# opts.arc_train = os.path.abspath(os.path.join(PATH_TO_PARSER, opts.arc_train))
+# opts.rel_train = os.path.abspath(os.path.join(PATH_TO_PARSER, opts.rel_train))
+
+# opts.text_test = os.path.abspath(os.path.join(PATH_TO_PARSER, opts.text_test))
+# opts.tag_test = os.path.abspath(os.path.join(PATH_TO_PARSER, opts.tag_test))
+# opts.jk_test = os.path.abspath(os.path.join(PATH_TO_PARSER, opts.jk_test))
+# opts.arc_test = os.path.abspath(os.path.join(PATH_TO_PARSER, opts.arc_test))
+# opts.rel_test = os.path.abspath(os.path.join(PATH_TO_PARSER, opts.rel_test))
 
 # Load a session into memory
 print("Loading saved parser session..")
@@ -71,7 +86,7 @@ with graph.as_default():
 		saver = tf.train.Saver()
 		saver.restore(session, test_opts.modelname)
 
-os.chdir(cwd)
+# os.chdir(cwd)
 
 @csrf_exempt
 def parse(request):
@@ -87,7 +102,7 @@ def parse(request):
 	if type(args) != dict or "text" not in args:
 		return JsonResponse({"error": "no text"}, safe=False)
 
-	os.chdir(PATH_TO_PARSER)
+	# os.chdir(PATH_TO_PARSER)
 	text = args["text"]
 
 	try:
@@ -95,7 +110,7 @@ def parse(request):
 		# model.run_epoch(session, testmode=True)
 		# print(model.predict(session))
 		parse = get_parse(test_opts)
-		os.chdir(cwd)
+		# os.chdir(cwd)
 		return JsonResponse({"parse": parse}, safe=False)
 	except:
 		os.chdir(cwd)

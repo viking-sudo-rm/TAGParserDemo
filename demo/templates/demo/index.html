@@ -41,6 +41,7 @@ const displacy = new displaCy(null, {
 	offsetX: 20
 });
 
+// TODO integrate this with displaCy API interface
 d3.select('#go').on('click', function() {
 	d3.json(URL, function(error, data) {
 		// data["parse"].forEach(function(raw, i) {
