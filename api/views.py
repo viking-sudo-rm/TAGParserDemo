@@ -11,90 +11,50 @@ from django.http import JsonResponse
 from django.contrib.staticfiles.management.commands.runserver import Command as RunserverCommand
 
 PATH_TO_PARSER = "graph_parser"
-
-def read_sents(sents_file):
-	with open(sents_file) as fhand:
-		return [line.split() for line in fhand]
-
-def get_parse(test_opts):
-	outputs = []
-	sent = read_sents(test_opts.text_test)[0]
-	# FIXME: after the first sentence, parse output doesn't update!
-	stags_sent, arcs_sent, rels_sent = model.predict(session)
-	# arcs_sent = arcs[sent_idx]
-	# rels_sent = rels[sent_idx]
-	print(len(sent), sent)
-	print(len(stags_sent), stags_sent)
-	print(len(arcs_sent), arcs_sent)
-	print(len(rels_sent), rels_sent)
-	arcs = [{
-		"start": min(i, int(arcs_sent[i]) - 1), # int(arcs_sent[i]) - 1
-		"end": max(i, int(arcs_sent[i]) - 1), # i
-		"dir": "right" if i < int(arcs_sent[i]) - 1 else "left", # right
-		"label": rels_sent[i],
-	} for i in xrange(len(sent)) if rels_sent[i] != "ROOT"]
-	words = [{
-		"tag": stags_sent[i],
-		"text": sent[i],
-	} for i in xrange(len(sent))]
-	return {"arcs": arcs, "words": words}
-
-def output_sents(text, test_opts):
-	sent = word_tokenize(sent_tokenize(text)[0])
-	# sents = map(word_tokenize, sents)
-	path = os.path.join(test_opts.base_dir, 'sents', 'test.txt')
-	with open(path, 'w') as fout:
-		# for sent in sents:
-		fout.write(' '.join(sent))
-		fout.write('\n')
+BASE_DIR = os.path.join(PATH_TO_PARSER, "demo")
+GLOVE_DIR = os.path.join(PATH_TO_PARSER, "glovevector")
+MODEL_DIR = os.path.join(BASE_DIR, "Pretrained_Parser/best_model")
 
 sys.path.insert(0, os.path.abspath(PATH_TO_PARSER))
 import utils
+from utils.models.demo import Demo_Parser
 
-with open(os.path.join(PATH_TO_PARSER, 'demo/configs/config_demo.pkl')) as fin:
-	opts = pickle.load(fin)
-with open(os.path.join(PATH_TO_PARSER, 'demo/configs/config_demo_test.pkl')) as fin:
-	test_opts = pickle.load(fin)
-
-print(test_opts.pretrained)
-
-test_opts.base_dir = os.path.abspath(os.path.join(PATH_TO_PARSER, "demo"))
-opts.word_embeddings_file = os.path.abspath(os.path.join(PATH_TO_PARSER, opts.word_embeddings_file))
-
-# opts.text_train = os.path.abspath(os.path.join(PATH_TO_PARSER, opts.text_train))
-# opts.tag_train = os.path.abspath(os.path.join(PATH_TO_PARSER, opts.tag_train))
-# opts.jk_train = os.path.abspath(os.path.join(PATH_TO_PARSER, opts.jk_train))
-# opts.arc_train = os.path.abspath(os.path.join(PATH_TO_PARSER, opts.arc_train))
-# opts.rel_train = os.path.abspath(os.path.join(PATH_TO_PARSER, opts.rel_train))
-
-# opts.text_test = os.path.abspath(os.path.join(PATH_TO_PARSER, opts.text_test))
-# opts.tag_test = os.path.abspath(os.path.join(PATH_TO_PARSER, opts.tag_test))
-# opts.jk_test = os.path.abspath(os.path.join(PATH_TO_PARSER, opts.jk_test))
-# opts.arc_test = os.path.abspath(os.path.join(PATH_TO_PARSER, opts.arc_test))
-# opts.rel_test = os.path.abspath(os.path.join(PATH_TO_PARSER, opts.rel_test))
-
-# Load a session into memory
 print("Loading saved parser session..")
+print("Glove directory: {}".format(GLOVE_DIR))
+print("Model directory: {}".format(MODEL_DIR))
 graph = tf.Graph()
 with graph.as_default():
-	print("Using {}.".format(opts.model))
-	Model = getattr(utils, opts.model)
-	model = Model(opts, test_opts)
+	model = Demo_Parser(BASE_DIR, GLOVE_DIR)
 	session = tf.Session()
 	with session.as_default():
 		session.run(tf.global_variables_initializer())
 		saver = tf.train.Saver()
-		saver.restore(session, test_opts.modelname)
+		saver.restore(session, MODEL_DIR)
 
-# os.chdir(cwd)
+def get_parse(sents, session=session):
+	# FIXME -- rn this assumes len(sents) == 1
+	sent = sents[0]
+	parses = model.run_on_sents(session, sents)
+	stags = parses["stags"]
+	arcs = map(int, parses["arcs"])
+	rels = parses["rels"]
+	arcs = [{
+		"start": min(i, arcs[i] - 1), # int(arcs[i]) - 1
+		"end": max(i, arcs[i] - 1), # i
+		"dir": "right" if i < arcs[i] - 1 else "left", # right
+		"label": rels[i],
+	} for i in xrange(len(sent)) if rels[i] != "ROOT"]
+	words = [{
+		"tag": stags[i],
+		"text": sent[i],
+	} for i in xrange(len(sent))]
+	return {"arcs": arcs, "words": words}
 
 @csrf_exempt
 def parse(request):
-
 	"""
 	API request to parse a sentence.
 	"""
-
 	try:
 		args = json.loads(request.body)
 	except:
@@ -102,18 +62,13 @@ def parse(request):
 	if type(args) != dict or "text" not in args:
 		return JsonResponse({"error": "no text"}, safe=False)
 
-	# os.chdir(PATH_TO_PARSER)
-	text = args["text"]
-
 	try:
-		output_sents(text, test_opts)
-		# model.run_epoch(session, testmode=True)
-		# print(model.predict(session))
-		parse = get_parse(test_opts)
-		# os.chdir(cwd)
+		text = args["text"]
+		sents = [word_tokenize(sent) for sent in sent_tokenize(text)]
+		sents = sents[:1] # Restricted to first sentence
+		parse = get_parse(sents)
 		return JsonResponse({"parse": parse}, safe=False)
 	except:
-		os.chdir(cwd)
 		print('-' * 60)
 		traceback.print_exc(file=sys.stdout)
 		print('-' * 60)
