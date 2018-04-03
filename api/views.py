@@ -20,8 +20,8 @@ import utils
 from utils.models.demo import Demo_Parser
 
 print("Loading saved parser session..")
-print("Glove directory: {}".format(GLOVE_DIR))
-print("Model directory: {}".format(MODEL_DIR))
+print("Glove vectors in {}.".format(GLOVE_DIR))
+print("Saved model in {}.".format(MODEL_DIR))
 graph = tf.Graph()
 with graph.as_default():
 	model = Demo_Parser(BASE_DIR, GLOVE_DIR)
@@ -52,9 +52,11 @@ def get_parse(sents, session=session):
 
 @csrf_exempt
 def parse(request):
+
 	"""
 	API request to parse a sentence.
 	"""
+
 	try:
 		args = json.loads(request.body)
 	except:
