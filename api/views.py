@@ -41,7 +41,8 @@ def get_parse(sents, session=session):
 	arcs = [{
 		"start": min(i, arcs[i] - 1), # int(arcs[i]) - 1
 		"end": max(i, arcs[i] - 1), # i
-		"dir": "right" if i < arcs[i] - 1 else "left", # right
+		# "dir": "right" if i < arcs[i] - 1 else "left", # right
+		"dir": "left" if i < arcs[i] - 1 else "right", # right
 		"label": rels[i],
 	} for i in xrange(len(sent)) if rels[i] != "ROOT"]
 	words = [{
