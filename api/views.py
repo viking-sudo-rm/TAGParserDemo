@@ -31,6 +31,12 @@ with graph.as_default():
 		saver = tf.train.Saver()
 		saver.restore(session, MODEL_DIR)
 
+def word_tokenize_period(sent):
+    words = word_tokenize(sent)
+    if words[-1] not in ['.', '?']:
+        words.append('.')
+    return words
+
 def get_parse(sents, session=session):
 	# FIXME -- rn this assumes len(sents) == 1
 	sent = sents[0]
@@ -67,7 +73,7 @@ def parse(request):
 
 	try:
 		text = args["text"]
-		sents = [word_tokenize(sent) for sent in sent_tokenize(text)]
+		sents = [word_tokenize_period(sent) for sent in sent_tokenize(text)]
 		sents = sents[:1] # Restricted to first sentence
 		parse = get_parse(sents)
 		return JsonResponse({"parse": parse}, safe=False)
