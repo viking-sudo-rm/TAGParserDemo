@@ -17,10 +17,8 @@ colorlog==3.1.2
 configparser==3.5.0
 csvw==1.0
 cycler==0.10.0
-Cython==0.25.2
 decorator==4.1.1
 Django==1.11.3
-docx2txt==0.6
 entrypoints==0.2.3
 enum34==1.1.6
 funcsigs==1.0.2
