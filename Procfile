@@ -1,1 +1,1 @@
-web: gunicorn draftsite.wsgi --log-file -
+web: gunicorn TAGParserDemo.wsgi --log-file -
