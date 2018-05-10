@@ -6,7 +6,6 @@ attrs==17.4.0
 backports-abc==0.5
 backports.shutil-get-terminal-size==1.0.0
 backports.weakref==1.0.post1
-beautifulsoup4==4.6.0
 bleach==1.5.0
 boto==2.48.0
 bz2file==0.98
@@ -41,17 +40,9 @@ ipywidgets==6.0.0
 isodate==0.6.0
 Jinja2==2.9.6
 jsonschema==2.6.0
-jupyter==1.0.0
-jupyter-client==5.1.0
-jupyter-console==5.1.0
-jupyter-core==4.3.0
 Keras==2.0.6
-lingpy==2.6.2
 lxml==4.2.1
-Markdown==2.6.11
-MarkupSafe==1.0
 matplotlib==2.0.2
-mercurial==4.2.1
 mido==1.2.8
 mistune==0.7.4
 mlxtend==0.12.0
@@ -60,7 +51,6 @@ nbconvert==5.2.1
 nbformat==4.3.0
 networkx==2.1
 nltk==3.2.4
-notebook==5.0.0
 numpy==1.14.1
 olefile==0.44
 pandas==0.20.3
@@ -70,15 +60,11 @@ pbr==3.1.1
 pexpect==4.2.1
 pickleshare==0.7.4
 Pillow==4.2.1
-pipenv==11.10.4
-pretty-midi==0.2.8
 prompt-toolkit==1.0.14
 protobuf==3.5.1
 ptyprocess==0.5.2
 Pygments==2.2.0
 pyparsing==2.2.0
-python-dateutil==2.6.0
-python-midi==0.2.4
 pytz==2017.2
 PyYAML==3.12
 pyzmq==16.0.2
@@ -109,7 +95,6 @@ tflearn==0.3.2
 tornado==4.5.1
 tqdm==4.19.5
 traitlets==4.3.2
-Unidecode==0.4.21
 uritemplate==3.0.0
 urllib3==1.22
 virtualenv==15.2.0
