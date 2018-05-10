@@ -108,9 +108,6 @@ termcolor==1.1.0
 terminado==0.6
 testpath==0.3.1
 tflearn==0.3.2
-Theano==0.9.0
-torch==0.2.0.post3
-torchvision==0.1.9
 tornado==4.5.1
 tqdm==4.19.5
 traitlets==4.3.2
