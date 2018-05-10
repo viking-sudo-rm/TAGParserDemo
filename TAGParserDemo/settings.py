@@ -25,7 +25,9 @@ SECRET_KEY = '6=7ij@(je7g#^)vhh)xiag1z#5gm6%xydi-&!k*kpv2re-zndi'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    "tagparserdemo.herokuapp.com",
+]
 
 
 # Application definition
