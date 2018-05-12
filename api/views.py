@@ -10,13 +10,14 @@ from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 from django.contrib.staticfiles.management.commands.runserver import Command as RunserverCommand
 
-# PATH_TO_PARSER = "graph_parser"
-PATH_TO_PARSER = "http://s3.amazonaws.com/bucketname/"
-BASE_DIR = os.path.join(PATH_TO_PARSER, "demo")
-GLOVE_DIR = os.path.join(PATH_TO_PARSER, "glovevector")
-MODEL_DIR = os.path.join(BASE_DIR, "Pretrained_Parser/best_model")
+PARSER_DIR = "graph_parser"
+DATA_DIR = "http://s3.amazonaws.com/bucketname/"
 
-sys.path.insert(0, os.path.abspath(PATH_TO_PARSER))
+DEMO_DIR = os.path.join(DATA_DIR, "demo")
+GLOVE_DIR = os.path.join(DATA_DIR, "glovevector")
+MODEL_DIR = os.path.join(DEMO_DIR, "Pretrained_Parser/best_model")
+
+sys.path.insert(0, os.path.abspath(PARSER_DIR))
 import utils
 from utils.models.demo import Demo_Parser
 
@@ -25,7 +26,7 @@ print("Glove vectors in {}.".format(GLOVE_DIR))
 print("Saved model in {}.".format(MODEL_DIR))
 graph = tf.Graph()
 with graph.as_default():
-	model = Demo_Parser(BASE_DIR, GLOVE_DIR)
+	model = Demo_Parser(DEMO_DIR, GLOVE_DIR)
 	session = tf.Session()
 	with session.as_default():
 		session.run(tf.global_variables_initializer())
