@@ -4,7 +4,7 @@ from __future__ import unicode_literals, print_function
 import tensorflow as tf
 from nltk.tokenize import sent_tokenize, word_tokenize
 import json, os, sys, pickle, traceback
-import boto
+from boto.s3.connection import S3Connection
 
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
@@ -36,12 +36,16 @@ def save_bucket(bucket, path):
 						raise
 
 DATA_DIR = 's3'
-BUCKET_NAME = "tagparserdemo"
-AWS_ACCESS_KEY_ID= os.getenv("AWS_ACCESS_KEY_ID")
-AWS_ACCESS_SECRET_KEY = os.getenv("AWS_SECRET_ACCESS_KEY")
+BUCKET_NAME = os.environ["S3_BUCKET"]
+AWS_ACCESS_KEY_ID = os.environ["AWS_ACCESS_KEY_ID"]
+AWS_ACCESS_SECRET_KEY = os.environ["AWS_SECRET_ACCESS_KEY"]
+
+print("Bucket name", BUCKET_NAME)
+print("Access key", AWS_ACCESS_KEY_ID)
+print("Secret key", AWS_ACCESS_SECRET_KEY)
 
 print("Connecting to AWS..")
-conn = boto.connect_s3(AWS_ACCESS_KEY_ID, AWS_ACCESS_SECRET_KEY)
+conn = boto.S3Connection(AWS_ACCESS_KEY_ID, AWS_ACCESS_SECRET_KEY)
 print("Getting bucket..")
 bucket = conn.get_bucket(BUCKET_NAME)
 print("Accessing bucket..")
