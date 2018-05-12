@@ -27,6 +27,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = [
     "tagparserdemo.herokuapp.com",
+    "0.0.0.0",
 ]
 
 

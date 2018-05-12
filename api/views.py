@@ -39,13 +39,15 @@ DATA_DIR = 's3'
 BUCKET_NAME = os.environ["S3_BUCKET"]
 AWS_ACCESS_KEY_ID = os.environ["AWS_ACCESS_KEY_ID"]
 AWS_ACCESS_SECRET_KEY = os.environ["AWS_SECRET_ACCESS_KEY"]
+REGION = "s3.us-east-2.amazonaws.com"
 
 print("Bucket name", BUCKET_NAME)
 print("Access key", AWS_ACCESS_KEY_ID)
 print("Secret key", AWS_ACCESS_SECRET_KEY)
+print("Region", REGION)
 
 print("Connecting to AWS..")
-conn = S3Connection(AWS_ACCESS_KEY_ID, AWS_ACCESS_SECRET_KEY)
+conn = S3Connection(AWS_ACCESS_KEY_ID, AWS_ACCESS_SECRET_KEY, host=REGION)
 print("Getting bucket..")
 bucket = conn.get_bucket(BUCKET_NAME)
 print("Accessing bucket..")
