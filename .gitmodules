@@ -1,3 +1,4 @@
 [submodule "graph_parser"]
 	path = graph_parser
 	url = https://github.com/jungokasai/graph_parser
+	branch = production
