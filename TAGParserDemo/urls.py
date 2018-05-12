@@ -30,6 +30,8 @@ urlpatterns += staticfiles_urlpatterns()
 # Download all the files ONCE
 #############################
 
+print("Starting stuff in urls.py")
+
 import os
 from boto.s3.connection import S3Connection
 from boto.exception import S3ResponseError
