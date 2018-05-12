@@ -24,7 +24,7 @@ def download_bucket(bucket, path):
 		try:
 			print ("Current File is ", s3_path)
 			l.get_contents_to_filename(s3_path)
-		except OSError, S3ResponseError as e:
+		except (OSError, S3ResponseError) as e:
 			pass
 			# check if the file has been downloaded locally  
 			if not os.path.exists(s3_path):
