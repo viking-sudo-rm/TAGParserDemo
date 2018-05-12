@@ -40,20 +40,20 @@ BUCKET_NAME = "tagparserdemo"
 AWS_ACCESS_KEY_ID= os.getenv("AWS_ACCESS_KEY_ID")
 AWS_ACCESS_SECRET_KEY = os.getenv("AWS_SECRET_ACCESS_KEY")
 
-print "Connecting to AWS.."
-conn  = boto.connect_s3(AWS_ACCESS_KEY_ID, AWS_ACCESS_SECRET_KEY)
-print "Getting bucket.."
+print("Connecting to AWS..")
+conn = boto.connect_s3(AWS_ACCESS_KEY_ID, AWS_ACCESS_SECRET_KEY)
+print("Getting bucket..")
 bucket = conn.get_bucket(BUCKET_NAME)
-print "Accessing bucket.."
+print("Accessing bucket..")
 download_bucket(bucket, DATA_DIR)
-print "Bucket downloaded successfully!"
+print("Bucket downloaded successfully!")
 
 PARSER_DIR = "graph_parser"
 DEMO_DIR = os.path.join(DATA_DIR, "demo")
 GLOVE_DIR = os.path.join(DATA_DIR, "glovevector")
 MODEL_DIR = os.path.join(DEMO_DIR, "Pretrained_Parser/best_model")
 
-print "Updating path.."
+print("Updating path..")
 sys.path.insert(0, os.path.abspath(PARSER_DIR))
 import utils
 from utils.models.demo import Demo_Parser
