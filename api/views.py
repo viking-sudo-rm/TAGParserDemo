@@ -11,7 +11,7 @@ from django.http import JsonResponse
 from django.contrib.staticfiles.management.commands.runserver import Command as RunserverCommand
 
 PARSER_DIR = "graph_parser"
-DATA_DIR = "http://s3.amazonaws.com/bucketname/"
+DATA_DIR = "http://s3.amazonaws.com/tagparserdemo/"
 
 DEMO_DIR = os.path.join(DATA_DIR, "demo")
 GLOVE_DIR = os.path.join(DATA_DIR, "glovevector")
