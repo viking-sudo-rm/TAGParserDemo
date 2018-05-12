@@ -10,7 +10,8 @@ from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 from django.contrib.staticfiles.management.commands.runserver import Command as RunserverCommand
 
-PATH_TO_PARSER = "graph_parser"
+# PATH_TO_PARSER = "graph_parser"
+PATH_TO_PARSER = "http://s3.amazonaws.com/bucketname/"
 BASE_DIR = os.path.join(PATH_TO_PARSER, "demo")
 GLOVE_DIR = os.path.join(PATH_TO_PARSER, "glovevector")
 MODEL_DIR = os.path.join(BASE_DIR, "Pretrained_Parser/best_model")
