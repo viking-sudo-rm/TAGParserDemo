@@ -4,19 +4,56 @@ from __future__ import unicode_literals, print_function
 import tensorflow as tf
 from nltk.tokenize import sent_tokenize, word_tokenize
 import json, os, sys, pickle, traceback
+import boto
 
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 from django.contrib.staticfiles.management.commands.runserver import Command as RunserverCommand
 
-PARSER_DIR = "graph_parser"
-DATA_DIR = "http://s3.amazonaws.com/tagparserdemo/"
+def save_bucket(bucket, path):
 
+	if not os.path.exists(path):
+		os.mkdir(path)
+	bucket_list = bucket.list()
+
+	for l in bucket_list:
+        key_string = str(l.key)
+        s3_path = path + key_string
+        try:
+            print ("Current File is ", s3_path)
+            l.get_contents_to_filename(s3_path)
+        except (OSError,S3ResponseError) as e:
+            pass
+            # check if the file has been downloaded locally  
+            if not os.path.exists(s3_path):
+                try:
+                    os.makedirs(s3_path)
+                except OSError as exc:
+                    # let guard againts race conditions
+                    import errno
+                    if exc.errno != errno.EEXIST:
+                        raise
+
+DATA_DIR = 's3'
+BUCKET_NAME = "tagparserdemo"
+AWS_ACCESS_KEY_ID= os.getenv("AWS_ACCESS_KEY_ID")
+AWS_ACCESS_SECRET_KEY = os.getenv("AWS_SECRET_ACCESS_KEY")
+
+print "Connecting to AWS.."
+conn  = boto.connect_s3(AWS_ACCESS_KEY_ID, AWS_ACCESS_SECRET_KEY)
+print "Getting bucket.."
+bucket = conn.get_bucket(BUCKET_NAME)
+print "Accessing bucket.."
+download_bucket(bucket, DATA_DIR)
+print "Bucket downloaded successfully!"
+
+PARSER_DIR = "graph_parser"
 DEMO_DIR = os.path.join(DATA_DIR, "demo")
 GLOVE_DIR = os.path.join(DATA_DIR, "glovevector")
 MODEL_DIR = os.path.join(DEMO_DIR, "Pretrained_Parser/best_model")
 
+print "Updating path.."
 sys.path.insert(0, os.path.abspath(PARSER_DIR))
 import utils
 from utils.models.demo import Demo_Parser
