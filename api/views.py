@@ -45,7 +45,7 @@ print("Access key", AWS_ACCESS_KEY_ID)
 print("Secret key", AWS_ACCESS_SECRET_KEY)
 
 print("Connecting to AWS..")
-conn = boto.S3Connection(AWS_ACCESS_KEY_ID, AWS_ACCESS_SECRET_KEY)
+conn = S3Connection(AWS_ACCESS_KEY_ID, AWS_ACCESS_SECRET_KEY)
 print("Getting bucket..")
 bucket = conn.get_bucket(BUCKET_NAME)
 print("Accessing bucket..")
