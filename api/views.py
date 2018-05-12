@@ -11,7 +11,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 from django.contrib.staticfiles.management.commands.runserver import Command as RunserverCommand
 
-def save_bucket(bucket, path):
+def download_bucket(bucket, path):
 
 	if not os.path.exists(path):
 		os.mkdir(path)
