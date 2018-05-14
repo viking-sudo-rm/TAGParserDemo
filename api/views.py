@@ -11,11 +11,10 @@ from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 from django.contrib.staticfiles.management.commands.runserver import Command as RunserverCommand
-
-PARSER_DIR = "graph_parser"
+from django.conf import settings
 
 print("Updating path..")
-sys.path.insert(0, os.path.abspath(PARSER_DIR))
+sys.path.insert(0, os.path.abspath(settings.PARSER_DIR))
 import utils
 from utils.models.demo import Demo_Parser
 
@@ -23,15 +22,15 @@ from utils.models.demo import Demo_Parser
 # from graph_parser.utils.models.demo import Demo_Parser
 
 print("Loading saved parser session..")
-print("Saved model in {}.".format(MODEL_DIR))
+print("Saved model in {}.".format(settings.MODEL_DIR))
 graph = tf.Graph()
 with graph.as_default():
-	model = Demo_Parser(DEMO_DIR)
+	model = Demo_Parser(settings.DEMO_DIR)
 	session = tf.Session()
 	with session.as_default():
 		session.run(tf.global_variables_initializer())
 		saver = tf.train.Saver()
-		saver.restore(session, MODEL_DIR)
+		saver.restore(session, settings.MODEL_DIR)
 
 def word_tokenize_period(sent):
 	words = word_tokenize(sent)

@@ -136,3 +136,15 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'demo/static')
 # STATICFILES_DIRS = (
 #     os.path.join(BASE_DIR, 'demo/static'),
 # )
+
+# My custom settings
+
+DATA_DIR = "s3"
+DEMO_DIR = os.path.join(DATA_DIR, "demo")
+MODEL_DIR = os.path.join(DEMO_DIR, "Pretrained_Parser/best_model")
+PARSER_DIR = "graph_parser"
+
+BUCKET_NAME = os.environ["S3_BUCKET"]
+AWS_ACCESS_KEY_ID = os.environ["AWS_ACCESS_KEY_ID"]
+AWS_ACCESS_SECRET_KEY = os.environ["AWS_SECRET_ACCESS_KEY"]
+REGION = "s3.us-east-2.amazonaws.com"

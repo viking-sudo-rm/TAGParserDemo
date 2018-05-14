@@ -3,17 +3,9 @@ from __future__ import unicode_literals
 import os
 
 from django.apps import AppConfig
+from django.conf import settings
 from boto.s3.connection import S3Connection
 from boto.exception import S3ResponseError
-
-DATA_DIR = "s3"
-DEMO_DIR = os.path.join(DATA_DIR, "demo")
-MODEL_DIR = os.path.join(DEMO_DIR, "Pretrained_Parser/best_model")
-
-BUCKET_NAME = os.environ["S3_BUCKET"]
-AWS_ACCESS_KEY_ID = os.environ["AWS_ACCESS_KEY_ID"]
-AWS_ACCESS_SECRET_KEY = os.environ["AWS_SECRET_ACCESS_KEY"]
-REGION = "s3.us-east-2.amazonaws.com"
 
 class ApiConfig(AppConfig):
 
@@ -21,17 +13,17 @@ class ApiConfig(AppConfig):
 
 	def ready(self):
 
-		print("Bucket name", BUCKET_NAME)
-		print("Access key", AWS_ACCESS_KEY_ID)
-		print("Secret key", AWS_ACCESS_SECRET_KEY)
-		print("Region", REGION)
+		print("Bucket name", settings.BUCKET_NAME)
+		print("Access key", settings.AWS_ACCESS_KEY_ID)
+		print("Secret key", settings.AWS_ACCESS_SECRET_KEY)
+		print("Region", settings.REGION)
 
 		print("Connecting to AWS..")
-		conn = S3Connection(AWS_ACCESS_KEY_ID, AWS_ACCESS_SECRET_KEY, host=REGION)
+		conn = S3Connection(settings.AWS_ACCESS_KEY_ID, settings.AWS_ACCESS_SECRET_KEY, host=settings.REGION)
 		print("Getting bucket..")
-		bucket = conn.get_bucket(BUCKET_NAME)
+		bucket = conn.get_bucket(settings.BUCKET_NAME)
 		print("Accessing bucket..")
-		self.download_bucket(bucket, DATA_DIR)
+		self.download_bucket(bucket, settings.DATA_DIR)
 		print("Bucket downloaded successfully!")
 
 
