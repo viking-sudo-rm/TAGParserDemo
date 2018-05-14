@@ -6,7 +6,6 @@ from django.apps import AppConfig
 from boto.s3.connection import S3Connection
 from boto.exception import S3ResponseError
 
-PARSER_DIR = "graph_parser"
 DATA_DIR = "s3"
 DEMO_DIR = os.path.join(DATA_DIR, "demo")
 MODEL_DIR = os.path.join(DEMO_DIR, "Pretrained_Parser/best_model")
