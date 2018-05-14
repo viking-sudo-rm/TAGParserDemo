@@ -1,8 +1,6 @@
 boto==2.48.0
 Django==1.11.3
-future==0.16.0
 gunicorn==19.8.1
 nltk==3.2.4
 numpy==1.14.1
-tensorboard==1.7.0
 tensorflow==1.7.0
