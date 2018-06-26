@@ -8,28 +8,47 @@ import json, os, sys, pickle, traceback
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
-from django.contrib.staticfiles.management.commands.runserver import Command as RunserverCommand
+from django.conf import settings
 
-PATH_TO_PARSER = "graph_parser"
-BASE_DIR = os.path.join(PATH_TO_PARSER, "demo")
-GLOVE_DIR = os.path.join(PATH_TO_PARSER, "glovevector")
-MODEL_DIR = os.path.join(BASE_DIR, "Pretrained_Parser/best_model")
+# PATH_TO_PARSER = "graph_parser"
+# BASE_DIR = os.path.join(PATH_TO_PARSER, "demo")
+# GLOVE_DIR = os.path.join(PATH_TO_PARSER, "glovevector")
+# MODEL_DIR = os.path.join(BASE_DIR, "Pretrained_Parser/best_model")
 
-sys.path.insert(0, os.path.abspath(PATH_TO_PARSER))
+# sys.path.insert(0, os.path.abspath(PATH_TO_PARSER))
+# import utils
+# from utils.models.demo import Demo_Parser
+
+# print("Loading saved parser session..")
+# print("Glove vectors in {}.".format(GLOVE_DIR))
+# print("Saved model in {}.".format(MODEL_DIR))
+# graph = tf.Graph()
+# with graph.as_default():
+# 	model = Demo_Parser(BASE_DIR, GLOVE_DIR)
+# 	session = tf.Session()
+# 	with session.as_default():
+# 		session.run(tf.global_variables_initializer())
+# 		saver = tf.train.Saver()
+# 		saver.restore(session, MODEL_DIR)
+
+print("Updating path..")
+sys.path.insert(0, os.path.abspath(settings.PARSER_DIR))
 import utils
 from utils.models.demo import Demo_Parser
 
+# import graph_parser.utils
+# from graph_parser.utils.models.demo import Demo_Parser
+
 print("Loading saved parser session..")
-print("Glove vectors in {}.".format(GLOVE_DIR))
-print("Saved model in {}.".format(MODEL_DIR))
+print("Using saved model in {}.".format(settings.MODEL_DIR))
 graph = tf.Graph()
 with graph.as_default():
-	model = Demo_Parser(BASE_DIR, GLOVE_DIR)
+	model = Demo_Parser(settings.DEMO_DIR)
 	session = tf.Session()
 	with session.as_default():
 		session.run(tf.global_variables_initializer())
 		saver = tf.train.Saver()
-		saver.restore(session, MODEL_DIR)
+		saver.restore(session, settings.MODEL_DIR)
 
 def word_tokenize_period(sent):
     words = word_tokenize(sent)
