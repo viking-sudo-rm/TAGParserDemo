@@ -15,3 +15,9 @@ To restart the server:
 ```bash
 sudo apachectl restart
 ```
+If tokenizers are missing for NLTK, run the following in the Python shell:
+
+```python
+import nltk
+nltk.download("punkt")
+```
