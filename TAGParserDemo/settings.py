@@ -134,6 +134,5 @@ STATICFILES_DIRS = [
 
 # My custom settings.
 PARSER_DIR = os.path.join(BASE_DIR, "graph_parser")
-# PARSER_DIR = "/Users/willmerrill/Documents/TAGParserDemo/graph_parser"
 DEMO_DIR = os.path.join(PARSER_DIR, "demo")
 MODEL_DIR = os.path.join(DEMO_DIR, "Pretrained_Parser/best_model")
