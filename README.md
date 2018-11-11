@@ -4,21 +4,28 @@ Web demo for graph-based TAG parsing. See https://github.com/jungokasai/graph_pa
 
 ## Some commands
 
+For missing submodules:
+
+```shell
+git submodule init
+git submodule update
+```
+
 If static files are missing:
 
-```bash
+```shell
 python manage.py collectstatic
 ```
 
 To restart the server on Michelangelo:
 
-```bash
+```shell
 sudo apachectl restart
 ```
 
 To run a local Django server (for testing purposes only):
 
-```bash
+```shell
 python manage.py runserver
 ```
 
