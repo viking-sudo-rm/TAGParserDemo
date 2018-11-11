@@ -16,7 +16,7 @@
 <!-- <script type="text/javascript" src="{% static 'demo/jquery-3.3.1.min.js' %}"></script> -->
 
 <div class="container">
-<h2>What is a Tree Adjoining Grammar (TAG)?</h2>
+<h2>What is a Tree Adjoining Grammar(TAG)?</h2>
 <p>A <b>tree adjoining grammar</b>, or <b>TAG</b>, is a tree-generating system that illustrates the linguistic dependencies among its terminal node words. Whereas a <b>context-free grammar (CFG)</b> generates strings and may only depict relationships between words that are close to each other in the tree, TAG provides a much greater degree of locality for nodes potentially far apart in the tree. The resulting TAG string is defined as the yield, or preorder traversal, of all the trees derived from the system.</p>
 <br>
 <p>The nodes of a TAG are <b>elementary trees</b> that can be combined with <b>substitution</b> or <b>adjunction</b> operations into <b>derived trees</b>. An elementary tree can take the form of an <b>initial tree</b> or an <b>auxiliary tree</b>. An initial tree has all interior nodes consisting of non-terminal symbols, with the leaves either as terminal symbols (words from the sentence) or as marked non-terminal symbols. Auxiliary trees are similar to initial trees, but with the additional condition that exactly one leaf node must be marked as a <b>foot node</b>; the foot node must be a non-terminal symbol that matches the symbol on a root node of another tree.</p>
