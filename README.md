@@ -4,7 +4,7 @@ Web demo for graph-based TAG parsing. See https://github.com/jungokasai/graph_pa
 
 ## Some commands
 
-For missing submodules:
+If the graph_parser submodule is missing:
 
 ```shell
 git submodule init
