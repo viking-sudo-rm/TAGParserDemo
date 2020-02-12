@@ -1,4 +1,4 @@
-Django==1.11.3
+Django==1.11.28
 future==0.16.0
 futures==3.2.0
 gast==0.2.0
